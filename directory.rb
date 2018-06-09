@@ -5,10 +5,14 @@ def input_students
   puts "To finish, just hit return twice"
   name = STDIN.gets.chomp
   while !name.empty? do
-    @students << {name: name, cohort: :november}
+    add_students(name, cohort = "november")
     puts "Now we have #{@students.count} students"
     name = STDIN.gets.chomp
   end
+end
+
+def add_students(name, cohort)
+  @students << {name: name, cohort: cohort.to_sym}
 end
 
 def interactive_menu
@@ -55,8 +59,8 @@ def print_header
 end
 
 def print_student_list
-  @students.each do |student|
-    puts "#{student[:name]} (#{student[:cohort]} cohort)"
+  @students.each_with_index do |student, index|
+    puts "#{index + 1} #{student[:name]} (#{student[:cohort]} cohort)"
   end
 end
 
@@ -78,7 +82,7 @@ def load_students(filename = "students.csv")
   file = File.open(filename, "r")
   file.readlines.each do |line|
   name, cohort = line.chomp.split(',')
-    @students << {name: name, cohort: cohort.to_sym}
+    add_students(name, cohort)
   end
   file.close
 end
